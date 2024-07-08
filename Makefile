@@ -7,6 +7,8 @@ GRAVITY_SRC = src/cli/gravity.c
 EXAMPLE_SRC = examples/example.c
 
 CC ?= gcc
+AR ?= ar
+RANLIB ?= ranlib
 SRC = $(wildcard $(COMPILER_DIR)*.c) \
       $(wildcard $(RUNTIME_DIR)*.c) \
       $(wildcard $(SHARED_DIR)*.c) \
@@ -16,6 +18,8 @@ SRC = $(wildcard $(COMPILER_DIR)*.c) \
 INCLUDE = -I$(COMPILER_DIR) -I$(RUNTIME_DIR) -I$(SHARED_DIR) -I$(UTILS_DIR) -I$(OPT_DIR)
 CFLAGS = $(INCLUDE) -std=gnu99 -fgnu89-inline -fPIC -DBUILD_GRAVITY_API
 OBJ = $(SRC:.c=.o)
+
+SLIBTARGET=libgravity.a
 
 ifeq ($(OS),Windows_NT)
 	# Windows
@@ -67,7 +71,12 @@ example:	$(OBJ) $(EXAMPLE_SRC)
 lib: gravity
 	$(CC) -shared -o $(LIBTARGET) $(OBJ) $(LDFLAGS)
 
+staticlib: gravity
+	$(AR) crs $(SLIBTARGET) $(OBJ)
+	$(RANLIB) $(SLIBTARGET)
+	# $(CC) -shared -o $(LIBTARGET) $(OBJ) $(LDFLAGS)
+
 clean:
-	rm -f $(OBJ) gravity example libgravity.so gravity.dll
+	rm -f $(OBJ) gravity example $(LIBTARGET) $(SLIBTARGET) gravity.dll
 	
 .PHONY: all clean gravity example
