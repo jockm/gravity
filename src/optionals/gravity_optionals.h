@@ -61,6 +61,19 @@
 #define GRAVITY_ISFILE_CLASS(_c)             false
 #endif
 
+#ifdef GRAVITY_INCLUDE_TSORT
+#define GRAVITY_FILE_REGISTER(_vm)           gravity_tsort_register(_vm)
+#define GRAVITY_FILE_FREE()                  gravity_tsort_free()
+#define GRAVITY_FILE_NAME()                  gravity_tsort_name()
+#define GRAVITY_ISFILE_CLASS(_c)             gravity_istsort_class(_c)
+#include "gravity_opt_file.h"
+#else
+#define GRAVITY_FILE_REGISTER(_vm)
+#define GRAVITY_FILE_FREE()
+#define GRAVITY_FILE_NAME()                  NULL
+#define GRAVITY_ISFILE_CLASS(_c)             false
+#endif
+
 #ifdef _MSC_VER
 #define INLINE								__inline
 #else
@@ -81,6 +94,9 @@ INLINE static const char **gravity_optional_identifiers(void) {
         #ifdef GRAVITY_INCLUDE_FILE
         GRAVITY_CLASS_FILE_NAME,
         #endif
+		#ifdef GRAVITY_INCLUDE_TSORT
+		GRAVITY_CLASS_TSORT_NAME,
+		#endif
         NULL};
     return list;
 }
