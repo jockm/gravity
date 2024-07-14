@@ -67,7 +67,7 @@ else
 	CFLAGS += -O2
 endif
 
-all: gravity
+all: gravity staticlib
 
 gravity:	$(OBJ) $(GRAVITY_SRC)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
